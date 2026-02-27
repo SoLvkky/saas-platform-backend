@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.db.dependencies import get_db
+from app.db.session import get_db
 from app.schemas.user import UserCreate, UserResponse
 from app.services.user_service import UserService
 from app.core.security import hash_password

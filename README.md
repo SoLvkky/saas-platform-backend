@@ -15,6 +15,9 @@
 - Async database setup
 - Alembic migrations
 - User registration with layered architecture
+- JWT authentication (access token)
+- Argon2 password hashing
+- Protected endpoints
 
 ## Architecture
 
