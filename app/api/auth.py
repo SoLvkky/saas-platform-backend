@@ -91,3 +91,43 @@ async def refresh(
         "access_token": access,
         "refresh_token": new_refresh
     }
+
+@router.post("/logout")
+async def logout(
+    refresh_token: str,
+    db: AsyncSession = Depends(get_db)
+):
+    
+    token_hash = hash_token(refresh_token)
+
+    result = await db.execute(
+        select(RefreshToken).where(
+            RefreshToken.token_hash == token_hash
+        )
+    )
+
+    db_token = result.scalar_one_or_none()
+
+    if not db_token:
+        return {"status": "ok"}
+    
+    db_token.revoked = True
+    await db.commit()
+
+    return {"status": "ok"}
+
+@router.post("/logout-all")
+async def logout_all(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    
+    await db.execute(
+        update(RefreshToken)
+        .where(RefreshToken.user_id == current_user.id)
+        .values(revoked=True)
+    )
+
+    await db.commit()
+
+    return {"status": "ok"}
