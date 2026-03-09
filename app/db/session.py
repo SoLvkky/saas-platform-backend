@@ -16,3 +16,6 @@ class Base(DeclarativeBase):
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     async with AsyncSessionLocal() as session:
         yield session
+
+from app.models.user import User
+from app.models.refresh_token import RefreshToken
